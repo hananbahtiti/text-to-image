@@ -14,6 +14,7 @@ logging.basicConfig(level=logging.INFO)
 RESULT_TTL = 3600
 
 async def generate_image(
+    model_name: str,
     prompt: str,
     client_id: str,
     *,
@@ -44,7 +45,7 @@ async def generate_image(
       output_format (str): 'jpeg' or 'png'
     """
     try:
-        logging.info(f"Generating image for {client_id} with model ...")
+        logging.info(f"Generating image for {client_id} with model {model_name}...")
 
         args = {
             "prompt": prompt,
@@ -65,7 +66,7 @@ async def generate_image(
         if sync_mode:
             args["sync_mode"] = True
 
-        handler = fal_client.submit("fal-ai/flux-pro/v1.1", arguments=args)
+        handler = fal_client.submit(model_name, arguments=args)
         result = handler.get()
 
         redis_conn.setex(f"result:{client_id}", RESULT_TTL, json.dumps(result))
