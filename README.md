@@ -1,1 +1,1 @@
-# text-to-image
+# image-generator-fal-ai
